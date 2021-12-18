@@ -10,12 +10,26 @@ import (
 
 var reader *bufio.Reader = bufio.NewReader(os.Stdin)
 
-func main() {
+// create a custom type of data structure
+type User struct {
+	UserName        string
+	Age             int
+	FavourireNumber float64
+	OwnADog         bool
+}
 
-	var userName string = readString("What is your name?")
-	var age = readInt("How old are you?")
+func main() {
+	var user User
+
+	user.UserName = readString("What is your name?")
+	user.Age = readInt("How old are you?")
+	user.FavourireNumber = readFloat("What is your favourite number?")
+
 	// fmt.Println("Your name is "+userName+", and your age is", age, "years old")
-	fmt.Println(fmt.Sprintf("Your name is %s and you are %d years old.", userName, age))
+	fmt.Println(fmt.Sprintf("Your name is %s and you are %d years old. Your favourite number is %.2f.",
+		user.UserName,
+		user.Age,
+		user.FavourireNumber))
 }
 
 func prompt() {
@@ -47,6 +61,23 @@ func readInt(s string) int {
 
 		if err != nil {
 			fmt.Println("Please enter a whole number.")
+		} else {
+			return num
+		}
+	}
+}
+
+func readFloat(s string) float64 {
+	for {
+		fmt.Println(s)
+		prompt()
+		userInput, _ := reader.ReadString('\n')
+		userInput = strings.Replace(userInput, "\n", "", -1)
+
+		num, err := strconv.ParseFloat(userInput, 64)
+
+		if err != nil {
+			fmt.Println("Please enter a number.")
 		} else {
 			return num
 		}
