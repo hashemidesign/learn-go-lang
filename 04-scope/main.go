@@ -1,20 +1,10 @@
 package main
 
-import "fmt"
+import "myapp/packageone"
 
-var one = 1 // package level varaible
+var myVar = "package var in main"
 
 func main() {
-	var one = "one" // block level varaible
-
-	fmt.Println(one)
-	myFunc()
-
-	// block level variables has priority
-	// and is a bad pactice to have shadowing variables in a program
-}
-
-func myFunc() {
-	// var one = "the number one"
-	fmt.Println(one)
+	var blockVar = "block var in main"
+	packageone.PrintMe(blockVar, myVar)
 }
