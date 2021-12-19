@@ -1,26 +1,43 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/eiannone/keyboard"
+)
 
 // reference types (pointers, slices, maps, functions, channels)
 
-func main() {
-	// go routine
-	go doSomething("hello, world")
+// you can only pass 1 type to a channel
+// rune is a single character
+var keyPressChan chan rune
 
-	fmt.Println("This is another message")
+func main() {
+	// we have to **make the channel
+	keyPressChan = make(chan rune)
+
+	go listenForKeyPress()
+
+	fmt.Println("press any key, or q to quit")
+	_ = keyboard.Open()
+
+	defer func() {
+		keyboard.Close()
+	}()
+
 	for {
-		// do nothing
+		char, _, _ := keyboard.GetSingleKey()
+		if char == 'q' || char == 'Q' {
+			break
+		}
+
+		keyPressChan <- char
 	}
 }
 
-func doSomething(s string) {
-	until := 0
+func listenForKeyPress() {
 	for {
-		fmt.Println("s is", s)
-		until += 1
-		if until >= 5 {
-			break
-		}
+		key := <-keyPressChan
+		fmt.Println("you pressed", string(key))
 	}
 }
